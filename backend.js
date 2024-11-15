@@ -30,13 +30,15 @@ app.post('/download', (req, res) => {
 
     // Check if the file exists before sending the response
     if (fs.existsSync(outputPath)) {
-      // Send the file path so the frontend can download it directly
-      res.json({ downloadLink: `http://192.168.1.231:3000/download-file?path=${encodeURIComponent(outputPath)}` });
+      // Use the public Render URL instead of local IP
+      const publicURL = 'https://vidownloader-backend.onrender.com';
+      res.json({ downloadLink: `${publicURL}/download-file?path=${encodeURIComponent(outputPath)}` });
     } else {
       res.status(500).json({ error: 'Failed to download video.' });
     }
   });
 });
+
 
 // Endpoint to serve the downloaded file
 app.get('/download-file', (req, res) => {
