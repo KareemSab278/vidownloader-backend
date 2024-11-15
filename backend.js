@@ -16,10 +16,10 @@ app.post('/download', (req, res) => {
   // Set a temporary path for the downloaded file
   const outputPath = path.join(__dirname, 'downloads', `video_${Date.now()}.mp4`);
   
-  // Full path to yt-dlp.exe
-  const ytDlpPath = 'C:\\yt-dlp.exe'; // Change this if needed
+  // Correct path to yt-dlp (since it's downloaded to the current project directory)
+  const ytDlpPath = './yt-dlp';
 
-  // Use exec with proper formatting for Windows paths
+  // Use exec with the correct yt-dlp path
   const command = `"${ytDlpPath}" -o "${outputPath}" "${url}"`;
 
   exec(command, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
