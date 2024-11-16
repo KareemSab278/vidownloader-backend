@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "node backend.js",
-    "postinstall": "curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp && chmod +x yt-dlp"
+    "postinstall": "curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp && chmod +x yt-dlp && ls -l bin/yt-dlp"
   },
   "license": "ISC"
 }
