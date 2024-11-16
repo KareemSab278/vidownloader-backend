@@ -17,7 +17,7 @@ app.post('/download', (req, res) => {
   const outputPath = path.join(__dirname, 'downloads', `video_${Date.now()}.mp4`);
 
   // Full path to yt-dlp (corrected for Linux environment)
-  const ytDlpPath = './bin/yt-dlp'; // Assuming yt-dlp is in the bin folder
+  const ytDlpPath = './yt-dlp'; // Updated to point to the root folder
   const cookiesPath = './cookies.txt'; // If you're using cookies for authentication
 
   // Command to download video using yt-dlp
