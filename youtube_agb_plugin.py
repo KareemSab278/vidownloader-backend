@@ -1,3 +1,4 @@
+#i found this file online that could bypass youtube's anti-bot trash. it doesnt work unfortunately :\
 import base64
 from yt_dlp.utils import get_first, parse_qs
 from yt_dlp.extractor.youtube import YoutubeIE
