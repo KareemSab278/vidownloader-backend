@@ -20,8 +20,8 @@ app.post('/download', (req, res) => {
   const ytDlpPath = './yt-dlp'; // Updated to point to the root folder
   const cookiesPath = './cookies.txt'; // If you're using cookies for authentication
 
-  // Command to download video using yt-dlp
-  const command = `"${ytDlpPath}" --cookies "${cookiesPath}" -o "${outputPath}" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3" "${url}"`;
+  // Command to download video using yt-dlp with higher speed settings
+  const command = `"${ytDlpPath}" --cookies "${cookiesPath}" -o "${outputPath}" --concurrent-fragments 16 --fragment-retries 10 --socket-timeout 15 --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3" "${url}"`;
 
   exec(command, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
     if (error) {
