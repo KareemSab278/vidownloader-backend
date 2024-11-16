@@ -16,10 +16,10 @@ app.post('/download', (req, res) => {
   // Set a temporary path for the downloaded file
   const outputPath = path.join(__dirname, 'downloads', `video_${Date.now()}.mp4`);
   
-  // Full path to yt-dlp.exe
-  const ytDlpPath = 'C:\\yt-dlp.exe'; // Change this if needed
+  // Full path to yt-dlp (corrected for Linux environment)
+  const ytDlpPath = './yt-dlp';
 
-  // Use exec with proper formatting for Windows paths
+  // Use exec with the correct yt-dlp path
   const command = `"${ytDlpPath}" -o "${outputPath}" "${url}"`;
 
   exec(command, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
@@ -30,8 +30,9 @@ app.post('/download', (req, res) => {
 
     // Check if the file exists before sending the response
     if (fs.existsSync(outputPath)) {
-      // Send the file path so the frontend can download it directly
-      res.json({ downloadLink: `http://192.168.1.231:3000/download-file?path=${encodeURIComponent(outputPath)}` });
+      // Use the public Render URL instead of local IP
+      const publicURL = 'https://vidownloader-backend.onrender.com';
+      res.json({ downloadLink: `${publicURL}/download-file?path=${encodeURIComponent(outputPath)}` });
     } else {
       res.status(500).json({ error: 'Failed to download video.' });
     }
