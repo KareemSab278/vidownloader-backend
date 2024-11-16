@@ -15,11 +15,13 @@ app.post('/download', (req, res) => {
 
   // Set a temporary path for the downloaded file
   const outputPath = path.join(__dirname, 'downloads', `video_${Date.now()}.mp4`);
-  
-  // Use yt-dlp standalone script and plugin
-  const ytDlpPath = path.join(__dirname, 'bin', 'yt-dlp');
-  const pluginPath = path.join(__dirname, 'youtube_agb_plugin.py');
-  const command = `"${ytDlpPath}" --plugin "${pluginPath}" -o "${outputPath}" "${url}"`;
+
+  // Full path to yt-dlp (corrected for Linux environment)
+  const ytDlpPath = './bin/yt-dlp'; // Assuming yt-dlp is in the bin folder
+  const cookiesPath = './cookies.txt'; // If you're using cookies for authentication
+
+  // Command to download video using yt-dlp
+  const command = `"${ytDlpPath}" --cookies "${cookiesPath}" -o "${outputPath}" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3" "${url}"`;
 
   exec(command, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
     if (error) {
@@ -37,6 +39,7 @@ app.post('/download', (req, res) => {
   });
 });
 
+// Endpoint to serve the downloaded file
 app.get('/download-file', (req, res) => {
   const filePath = req.query.path;
 
