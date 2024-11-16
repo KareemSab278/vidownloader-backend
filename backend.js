@@ -16,17 +16,10 @@ app.post('/download', (req, res) => {
   // Set a temporary path for the downloaded file
   const outputPath = path.join(__dirname, 'downloads', `video_${Date.now()}.mp4`);
   
-  // Full path to yt-dlp (corrected for Linux environment)
-  const ytDlpPath = './yt-dlp';
-
-  // Use exec with the correct yt-dlp path
-  const cookiesPath = './cookies.txt';
-  //const command = `"${ytDlpPath}" --cookies "${cookiesPath}" --limit-rate 500K --sleep-interval 5 -o "${outputPath}" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3" "${url}"`;
-
-  const command = `python3 -m yt_dlp --plugin youtube_agb_plugin "${url}" --output "${outputPath}"`;
-
-  //const command = `"${ytDlpPath}" --cookies "${cookiesPath}" -o "${outputPath}" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3" "${url}"`;
-  //const command = `"${ytDlpPath}" --cookies "${cookiesPath}" --extractor-args "youtube:data_sync_id=XXX" -o "${outputPath}" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3" "${url}"`;
+  // Use yt-dlp standalone script and plugin
+  const ytDlpPath = path.join(__dirname, 'bin', 'yt-dlp');
+  const pluginPath = path.join(__dirname, 'youtube_agb_plugin.py');
+  const command = `"${ytDlpPath}" --plugin "${pluginPath}" -o "${outputPath}" "${url}"`;
 
   exec(command, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
     if (error) {
@@ -36,7 +29,6 @@ app.post('/download', (req, res) => {
 
     // Check if the file exists before sending the response
     if (fs.existsSync(outputPath)) {
-      // Use the public Render URL instead of local IP
       const publicURL = 'https://vidownloader-backend.onrender.com';
       res.json({ downloadLink: `${publicURL}/download-file?path=${encodeURIComponent(outputPath)}` });
     } else {
@@ -45,7 +37,6 @@ app.post('/download', (req, res) => {
   });
 });
 
-// Endpoint to serve the downloaded file
 app.get('/download-file', (req, res) => {
   const filePath = req.query.path;
 
