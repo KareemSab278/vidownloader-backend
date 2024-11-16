@@ -1,5 +1,13 @@
 {
+  "name": "vidownloader-backend",
+  "version": "1.0.0",
+  "main": "backend.js",
   "dependencies": {
     "express": "^4.21.1"
-  }
+  },
+  "scripts": {
+    "start": "node backend.js",
+    "postinstall": "curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp && chmod +x yt-dlp"
+  },
+  "license": "ISC"
 }
