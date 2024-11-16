@@ -21,7 +21,7 @@ app.post('/download', (req, res) => {
 
   // Use exec with the correct yt-dlp path
   const cookiesPath = './cookies.txt';
-const command = `"${ytDlpPath}" --cookies "${cookiesPath}" -o "${outputPath}" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3" "${url}"`;
+  const command = `"${ytDlpPath}" --cookies "${cookiesPath}" --extractor-args "youtube:data_sync_id=XXX" -o "${outputPath}" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3" "${url}"`;
 
   exec(command, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
     if (error) {
