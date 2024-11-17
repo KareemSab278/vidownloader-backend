@@ -3,9 +3,18 @@ const path = require('path');
 const fs = require('fs');
 
 const express = require('express');
+const cors = require('cors'); // Import the CORS middleware
 
 const app = express();
 app.use(express.json());
+
+// Add CORS middleware
+const corsOptions = {
+  origin: 'https://vidownloader-net.onrender.com',
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+};
+app.use(cors(corsOptions)); // Enable CORS for all routes
 
 app.post('/download', (req, res) => {
   const url = req.body.url;
