@@ -1,12 +1,10 @@
-const express = require('express');
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const cors = require('cors');
+const express = require('express');
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 
 app.post('/download', (req, res) => {
