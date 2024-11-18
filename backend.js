@@ -67,8 +67,6 @@ app.listen(3000, () => {
 }); />
 */
 
-
-
 const express = require('express');
 const { exec } = require('child_process');
 const path = require('path');
@@ -86,7 +84,7 @@ app.post('/download', (req, res) => {
   // Path to yt-dlp and plugin (if applicable)
   const ytDlpPath = path.join(__dirname, 'bin', 'yt-dlp');
   const pluginPath = path.join(__dirname, 'youtube_agb_plugin.py');
-  const command = `"${ytDlpPath}" --plugin "${pluginPath}" --get-url "${url}"`;
+  const command = `"${ytDlpPath}" --plugin "${pluginPath}" --get-url -f mp4 "${url}"`;
 
   exec(command, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
     if (error) {
@@ -107,4 +105,3 @@ app.post('/download', (req, res) => {
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
 });
-
