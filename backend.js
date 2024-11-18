@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+/*const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
@@ -64,4 +64,47 @@ app.get('/download-file', (req, res) => {
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
+}); />
+*/
+
+
+
+const express = require('express');
+const { exec } = require('child_process');
+const path = require('path');
+
+const app = express();
+app.use(express.json());
+
+app.post('/download', (req, res) => {
+  const url = req.body.url;
+
+  if (!url) {
+    return res.status(400).json({ error: 'No URL provided' });
+  }
+
+  // Path to yt-dlp and plugin (if applicable)
+  const ytDlpPath = path.join(__dirname, 'bin', 'yt-dlp');
+  const pluginPath = path.join(__dirname, 'youtube_agb_plugin.py');
+  const command = `"${ytDlpPath}" --plugin "${pluginPath}" --get-url "${url}"`;
+
+  exec(command, { maxBuffer: 1024 * 500 }, (error, stdout, stderr) => {
+    if (error) {
+      console.error('Error executing yt-dlp:', stderr);
+      return res.status(500).json({ error: 'Failed to fetch download link.', details: stderr });
+    }
+
+    const downloadLink = stdout.trim(); // Extract the direct URL
+    if (downloadLink) {
+      res.json({ downloadLink });
+    } else {
+      res.status(500).json({ error: 'No download link found.' });
+    }
+  });
 });
+
+// Start the server
+app.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+});
+
