@@ -17,8 +17,6 @@ def download():
     ydl_opts = {
     'format': 'mp4',
     'quiet': False,
-    'proxy': 'http://44.195.247.145:80',  # Your proxy
-    'nocheckcertificate': True,  # Ignore SSL certificate verification
     'http_headers': {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'Referer': 'https://www.tiktok.com/',
@@ -27,6 +25,7 @@ def download():
         'Connection': 'keep-alive',
     },
 }
+
 
 
     try:
