@@ -16,12 +16,13 @@ def download():
 
     ydl_opts = {
         'format': 'mp4',
-        'quiet': True,
+        'quiet': False,  # Verbose logs for debugging
+        'cookiefile': 'cookies.txt',  # Path to your cookies file
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Referer': 'https://www.tiktok.com/',
+            'Accept-Language': 'en-US,en;q=0.9',
         },
-        'cookiefile': 'cookies.txt',
     }
 
     try:
