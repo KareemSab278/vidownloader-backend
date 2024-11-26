@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from yt_dlp import YoutubeDL
+import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://vidownloader-net.onrender.com"}})  # Adjust origin as needed
+CORS(app, resources={r"/download": {"origins": "https://vidownloader-net.onrender.com"}})
 
 @app.route('/download', methods=['POST'])
 def download():
@@ -16,6 +17,11 @@ def download():
     ydl_opts = {
         'format': 'mp4',
         'quiet': True,
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Referer': 'https://www.tiktok.com/',
+        },
+        'cookiefile': 'cookies.txt',
     }
 
     try:
@@ -32,4 +38,5 @@ def download():
         return jsonify({'error': 'Failed to fetch download link.', 'details': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
+    port = int(os.environ.get("PORT", 3000))
+    app.run(host='0.0.0.0', port=port)
