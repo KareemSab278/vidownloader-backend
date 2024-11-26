@@ -15,18 +15,19 @@ def download():
         return jsonify({'error': 'No URL provided'}), 400
 
     ydl_opts = {
-        'format': 'mp4',
-        'quiet': False,  # Verbose logging for debugging
-        'proxy': 'http://44.195.247.145:80',  # The selected proxy
-        'cookiefile': 'cookies.txt',  # Ensure this file contains valid TikTok cookies
-        'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Referer': 'https://www.tiktok.com/',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Connection': 'keep-alive',
-        },
-    }
+    'format': 'mp4',
+    'quiet': False,
+    'proxy': 'http://44.195.247.145:80',  # Your proxy
+    'nocheckcertificate': True,  # Ignore SSL certificate verification
+    'http_headers': {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Referer': 'https://www.tiktok.com/',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Connection': 'keep-alive',
+    },
+}
+
 
     try:
         with YoutubeDL(ydl_opts) as ydl:
