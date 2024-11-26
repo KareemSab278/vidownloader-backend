@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from yt_dlp import YoutubeDL
+import requests
 import os
 
 app = Flask(__name__)
@@ -15,19 +16,16 @@ def download():
         return jsonify({'error': 'No URL provided'}), 400
 
     ydl_opts = {
-    'format': 'mp4',
-    'quiet': False,
-    'http_headers': {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Referer': 'https://www.tiktok.com/',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Connection': 'keep-alive',
-    },
-}
-
-
-
+        'format': 'mp4',
+        'quiet': False,
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Referer': 'https://www.tiktok.com/',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Connection': 'keep-alive',
+        },
+    }
 
     try:
         with YoutubeDL(ydl_opts) as ydl:
@@ -37,7 +35,19 @@ def download():
             if not download_link:
                 return jsonify({'error': 'No download link found.'}), 500
 
-            return jsonify({'downloadLink': download_link})
+        # Fetch the video content
+        headers = ydl_opts['http_headers']
+        video_response = requests.get(download_link, headers=headers, stream=True)
+
+        if video_response.status_code == 200:
+            # Stream the video to the user
+            return Response(
+                video_response.iter_content(chunk_size=8192),
+                content_type=video_response.headers['Content-Type'],
+                headers={"Content-Disposition": f"attachment; filename={info_dict['title']}.mp4"},
+            )
+
+        return jsonify({'error': 'Failed to download video from TikTok.'}), 500
 
     except Exception as e:
         return jsonify({'error': 'Failed to fetch download link.', 'details': str(e)}), 500
