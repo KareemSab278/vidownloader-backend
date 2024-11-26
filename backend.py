@@ -10,7 +10,7 @@ import yt_dlp.utils
 app = Flask(__name__)
 CORS(app, resources={r"/download": {"origins": "https://vidownloader-net.onrender.com"}})
 
-# Enable logging for debugging
+# Enable logging
 logging.basicConfig(level=logging.DEBUG)
 
 # Check for cookies file
@@ -30,8 +30,8 @@ def download():
     # yt-dlp options
     ydl_opts = {
         'format': 'mp4',
-        'cookiefile': 'cookies.txt',  # Path to cookies file
-        'http_headers': {  # Add this block
+        'cookiefile': 'cookies.txt',  # Ensure this file exists and is updated
+        'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Referer': 'https://www.tiktok.com/',
             'Accept-Language': 'en-US,en;q=0.9',
@@ -51,7 +51,6 @@ def download():
                 logging.error("No download link found.")
                 return jsonify({'error': 'No download link found.'}), 500
 
-
         # Fetch video content
         headers = ydl_opts['http_headers']
         video_response = requests.get(download_link, headers=headers, stream=True)
@@ -65,7 +64,7 @@ def download():
                 headers={"Content-Disposition": f"attachment; filename={info_dict['title']}.mp4"},
             )
 
-        logging.error(f"Unexpected response from source: {video_response.status_code}")
+        logging.error(f"Failed to fetch video content. Status: {video_response.status_code}")
         return jsonify({'error': 'Failed to fetch video content.', 'status': video_response.status_code}), 500
 
     except yt_dlp.utils.DownloadError as e:
