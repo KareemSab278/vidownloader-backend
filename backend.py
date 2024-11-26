@@ -13,10 +13,6 @@ CORS(app, resources={r"/download": {"origins": "https://vidownloader-net.onrende
 # Enable logging
 logging.basicConfig(level=logging.DEBUG)
 
-# Check for cookies file
-if not os.path.exists('cookies.txt'):
-    logging.error("The cookies.txt file is missing! Make sure it exists and is correctly formatted.")
-
 @app.route('/download', methods=['POST'])
 def download():
     data = request.get_json()
@@ -38,6 +34,8 @@ def download():
             'Accept': '*/*',
             'Connection': 'keep-alive',
         },
+        'geo_bypass': True,
+        'geo_bypass_country': 'US',
     }
 
     try:
