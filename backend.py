@@ -13,7 +13,7 @@ CORS(app, resources={r"/download": {"origins": "https://vidownloader-net.onrende
 logging.basicConfig(level=logging.DEBUG)
 
 # Set path to cookies.txt
-COOKIES_PATH = 'C:/Users/user/Documents/cookies.txt'
+COOKIES_PATH = 'cookies.txt'
 
 # Check if cookies file exists
 if not os.path.exists(COOKIES_PATH):
