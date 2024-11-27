@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-import request
+import requests
 from yt_dlp import YoutubeDL
 import logging
 
