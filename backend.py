@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from yt_dlp import YoutubeDL
-import requests
 import os
 import logging
 import yt_dlp.utils
@@ -10,8 +9,15 @@ import yt_dlp.utils
 app = Flask(__name__)
 CORS(app, resources={r"/download": {"origins": "https://vidownloader-net.onrender.com"}})
 
-# Enable logging
+# Enable logging for debugging
 logging.basicConfig(level=logging.DEBUG)
+
+# Set path to cookies.txt
+COOKIES_PATH = 'C:/Users/user/Documents/cookies.txt'
+
+# Check if cookies file exists
+if not os.path.exists(COOKIES_PATH):
+    logging.error(f"Cookies file not found at: {COOKIES_PATH}")
 
 @app.route('/download', methods=['POST'])
 def download():
@@ -26,16 +32,10 @@ def download():
     # yt-dlp options
     ydl_opts = {
         'format': 'mp4',
-        'cookiefile': 'cookies.txt',  # Ensure this file exists and is updated
+        'cookiefile': COOKIES_PATH,  # Use the cookies.txt file
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Referer': 'https://www.tiktok.com/',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept': '*/*',
-            'Connection': 'keep-alive',
         },
-        'geo_bypass': True,
-        'geo_bypass_country': 'US',
     }
 
     try:
@@ -49,7 +49,7 @@ def download():
                 logging.error("No download link found.")
                 return jsonify({'error': 'No download link found.'}), 500
 
-        # Fetch video content
+        # Stream video content to the user
         headers = ydl_opts['http_headers']
         video_response = requests.get(download_link, headers=headers, stream=True)
         logging.debug(f"Video response status code: {video_response.status_code}")
@@ -62,7 +62,7 @@ def download():
                 headers={"Content-Disposition": f"attachment; filename={info_dict['title']}.mp4"},
             )
 
-        logging.error(f"Failed to fetch video content. Status: {video_response.status_code}")
+        logging.error(f"Unexpected response from source: {video_response.status_code}")
         return jsonify({'error': 'Failed to fetch video content.', 'status': video_response.status_code}), 500
 
     except yt_dlp.utils.DownloadError as e:
